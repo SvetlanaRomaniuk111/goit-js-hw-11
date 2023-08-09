@@ -1,1 +1,9 @@
 @import '~node_modules/modern-normalize/modern-normalize.css';
+button {
+  cursor: pointer;
+  border: none;
+}
+input {
+  outline: none;
+  border: none;
+}
