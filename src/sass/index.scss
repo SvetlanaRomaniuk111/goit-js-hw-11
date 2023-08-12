@@ -60,12 +60,12 @@
   .info {
     display: flex;
     justify-content: space-between;
-    p {
-      display: flex;
-      flex-direction: column;
-      flex-grow: 1;
-      text-align: center;
-    }
+  }
+  .info-item {
+    display: flex;
+    flex-direction: column;
+    flex-grow: 1;
+    text-align: center;
   }
 }
 

@@ -1,11 +1,13 @@
 import 'simplelightbox/dist/simple-lightbox.min.css';
-import { fetchImages } from './api/index.js';
+import { fetchImages } from './api/pixabay-api.js';
 import SimpleLightbox from 'simplelightbox';
 import Notiflix from 'notiflix';
 
-const gallery = document.querySelector('.gallery');
-const loadMore = document.querySelector('.load-more');
-const searchForm = document.querySelector('.search-form');
+const elements = {
+  gallery: document.querySelector('.gallery'),
+  loadMore: document.querySelector('.load-more'),
+  searchForm: document.querySelector('.search-form'),
+};
 
 const generateGaleryCard = ({
   likes,
@@ -48,21 +50,21 @@ const generateGaleryCard = ({
 
 const render = (page, query, isSearch) => {
   fetchImages(page, query).then(data => {
-    let galleryElems = gallery.innerHTML;
+    let galleryElems = elements.gallery.innerHTML;
     console.log(data);
     const galleryHTML = data.hits.reduce((acc, cur) => {
       acc = acc.concat(generateGaleryCard(cur));
       return acc;
     }, '');
-    gallery.innerHTML = isSearch
+    elements.gallery.innerHTML = isSearch
       ? galleryHTML
       : galleryElems.concat(galleryHTML);
 
-    if (gallery.children.length === 500) {
+    if (elements.gallery.children.length === data.totalHits.length) {
       Notiflix.Notify.failure(
         `We're sorry, but you've reached the end of search results.`
       );
-      loadMore.style.display = 'none';
+      elements.loadMore.style.display = 'none';
     }
 
     new SimpleLightbox('.gallery a', {
@@ -74,9 +76,9 @@ const render = (page, query, isSearch) => {
       Notiflix.Notify.failure(
         `Sorry, there are no images matching your search query. Please try again.`
       );
-      loadMore.style.display = 'none';
+      elements.loadMore.style.display = 'none';
     } else {
-      loadMore.style.display = 'flex';
+      elements.loadMore.style.display = 'flex';
     }
 
     if (isSearch && data.hits.length) {
@@ -99,12 +101,12 @@ const render = (page, query, isSearch) => {
 
 let page = 1;
 let query = '';
-loadMore.addEventListener('click', () => {
+elements.loadMore.addEventListener('click', () => {
   page++;
   render(page, query, false);
 });
 
-searchForm.addEventListener('submit', e => {
+elements.searchForm.addEventListener('submit', e => {
   e.preventDefault();
   query = e.currentTarget.elements.searchQuery.value;
   page = 1;
